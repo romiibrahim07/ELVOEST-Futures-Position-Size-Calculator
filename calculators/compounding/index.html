@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#080b0a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ELVOEST"><link rel="manifest" href="../../manifest.webmanifest"><link rel="apple-touch-icon" href="../../icons/icon-192.png"><link rel="stylesheet" href="../../assets/css/main.css"><title>Compounding Calculator — ELVOEST</title></head>
+<body><nav class="site-nav">
+  <a class="nav-brand" href="../../"><span class="nav-mark">E</span><span class="word">ELVO<span>EST</span></span></a>
+  <div class="nav-links">
+    <a href="../../">Home</a>
+    <div class="nav-dropdown"><button type="button" aria-expanded="false">Features&nbsp;⌄</button>
+      <div class="dropdown-menu"><a href="../futures/">Futures Position Size</a><a href="./">Compounding Calculator</a></div>
+    </div>
+  </div>
+</nav><main class="container calculator"><header class="page-heading"><div class="eyebrow"><span class="dot"></span> CALCULATOR 02</div><h1>Compounding <em style="color:var(--green)">Calculator.</em></h1><p>Simulate how your capital could grow with a consistent return per period. Change any input to update the projection and chart.</p></header>
+<section class="panel"><div class="fields">
+<div class="field"><label for="initial">Initial Balance (USD)</label><input id="initial" type="number" min="0.01" step="any" value="1000"></div>
+<div class="field"><label for="rate">Profit per Period (%)</label><input id="rate" type="number" min="-99.99" step="any" value="2"></div>
+<div class="field"><label for="period">Compounding Period</label><select id="period"><option value="Daily">Daily</option><option value="Weekly">Weekly</option><option value="Monthly">Monthly</option></select></div>
+<div class="field"><label for="count">Number of Periods</label><input id="count" type="number" min="1" max="1000" step="1" value="30"></div>
+<div class="field full"><label for="deposit">Additional Deposit per Period (USD, optional)</label><input id="deposit" type="number" min="0" step="any" value="0"></div>
+</div><p class="note">Assumption: each period's percentage return is applied to the balance, then the additional deposit is added. No trading fees, taxes, or withdrawals are included.</p></section>
+<section class="panel currency-panel"><div class="currency-head"><div><strong>Display Currency</strong><p class="note" id="fx-status">Loading latest USD/IDR rate…</p></div><div class="currency-toggle" role="group" aria-label="Display currency"><button type="button" class="currency-btn active" data-currency="USD" aria-pressed="true">USD</button><button type="button" class="currency-btn" data-currency="IDR" aria-pressed="false">IDR</button></div></div></section>
+<div class="stats">
+<div class="stat"><small>PROJECTED FINAL BALANCE</small><strong class="green" id="final">—</strong></div>
+<div class="stat"><small>NET PROFIT</small><strong id="profit">—</strong></div>
+<div class="stat"><small>TOTAL GROWTH</small><strong id="growth">—</strong></div>
+<div class="stat"><small>PERIODS</small><strong id="periods">—</strong></div>
+</div>
+<section class="chart-wrap"><div class="chart-head"><strong>Capital Growth</strong><span id="chart-period">Daily projection</span></div><svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Projected balance growth chart"><text x="360" y="150" text-anchor="middle" class="chart-label">Enter valid values to view chart</text></svg><div class="chart-head"><span id="start-label">START —</span><span id="end-label">FINAL —</span></div></section>
+<p class="note">This is a mathematical projection, not a promise of trading returns. Actual results vary and can include losses.</p>
+<footer class="footer"><strong>ELVOEST.</strong><a href="../../">Back to Home ↑</a></footer></main><script src="../../assets/js/compounding.js"></script><script src="../../assets/js/site.js"></script><script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("../../sw.js",{scope:"../../"}));</script></body></html>

@@ -1,0 +1,1 @@
+document.querySelector('.nav-dropdown > button')?.addEventListener('click',e=>{const m=document.querySelector('.dropdown-menu');const open=m.style.display==='grid';m.style.display=open?'none':'grid';e.currentTarget.setAttribute('aria-expanded',String(!open));});

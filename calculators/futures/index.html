@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ELVOEST">
+  <meta name="description" content="Local futures position size, margin, risk and P&L calculator.">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../../icons/icon-192.png">
+  <link rel="icon" href="../../icons/icon-192.png">
+  <title>Futures Position Size — ELVOEST</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080b0a;--panel:#111715;--panel2:#151d19;--line:#26342d;--muted:#91a198;--text:#f1f7f3;--green:#21d18b;--green2:#123e2d;--red:#ff6573;--amber:#f5c56b;--radius:19px}
+    *{box-sizing:border-box}
+    html,body{scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-y}
+    html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+html{background:var(--bg);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#163629 0,transparent 45%),var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;min-height:100vh;padding:0 0 env(safe-area-inset-bottom)}
+    .wrap{width:min(100%,760px);margin:0 auto;padding:22px 16px 42px}.top{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 22px}.brand{display:flex;align-items:center;gap:11px}.logo{width:39px;height:39px;border-radius:13px;background:linear-gradient(145deg,#2cf0a2,#08794d);display:grid;place-items:center;color:#03150d;font-weight:950;font-size:20px;box-shadow:0 8px 24px #0d9d6340}.brandname{font-weight:850;letter-spacing:2px;font-size:15px}.brandname span{color:var(--green)}.subbrand{font-size:10px;color:var(--muted);letter-spacing:1.25px;margin-top:3px}.local{font-size:10px;color:#a5b7ad;border:1px solid var(--line);padding:7px 10px;border-radius:99px;white-space:nowrap}
+    h1{font-size:clamp(24px,6vw,34px);line-height:1.1;letter-spacing:-1.1px;margin:0 0 8px;font-weight:850}.intro{color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 22px}.section{background:linear-gradient(145deg,#131b17,#0f1512);border:1px solid var(--line);border-radius:var(--radius);padding:17px;margin:0 0 14px;box-shadow:0 12px 35px #0003}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.section-title{font-size:12px;font-weight:800;letter-spacing:1.35px;text-transform:uppercase}.step{font-size:10px;color:var(--green);border:1px solid #235b43;padding:4px 7px;border-radius:7px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;color:#a8b7ae;font-size:11px;font-weight:650;margin:0 0 7px}.input-wrap{position:relative}input{width:100%;height:47px;border-radius:11px;border:1px solid #2b3932;background:#090f0c;color:var(--text);font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:0 12px;outline:none;min-width:0}input:focus{border-color:var(--green);box-shadow:0 0 0 3px #21d18b19}input::placeholder{color:#526159}.suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#7e9085;font-size:11px;pointer-events:none}.has-suffix{padding-right:48px}
+    .actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}.btn{min-height:43px;border-radius:10px;border:1px solid #34453b;background:#18221c;color:#dce9e1;font-size:10px;font-weight:850;letter-spacing:.6px;padding:9px 5px;cursor:pointer}.btn.primary{background:var(--green);border-color:var(--green);color:#03170e}.btn:active{transform:scale(.985)}.note{color:#7f9086;font-size:10px;line-height:1.45;margin:11px 1px 0}
+    .direction{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}.dir{height:45px;border-radius:11px;border:1px solid var(--line);background:#0b110e;color:#9eafa5;font-weight:850;letter-spacing:1px;cursor:pointer}.dir.active.long{background:#123d2b;border-color:#1b9b65;color:#3ce6a0}.dir.active.short{background:#421b22;border-color:#b63e50;color:#ff8994}
+    .error,.warning{display:none;border-radius:11px;padding:11px 12px;font-size:12px;line-height:1.45;margin-top:13px}.error{background:#3b171d;border:1px solid #7e2e3b;color:#ff9aa4}.warning{background:#392c16;border:1px solid #735724;color:#ffd78a}
+    .results{display:none}.hero-result{background:linear-gradient(130deg,#103b2a,#10251b);border:1px solid #236c4a;border-radius:17px;padding:17px;margin-bottom:12px}.hero-label{color:#9bcbb2;font-size:10px;font-weight:800;letter-spacing:1.2px}.hero-value{font-size:clamp(29px,8vw,39px);font-weight:900;letter-spacing:-1.2px;margin:5px 0 2px;overflow-wrap:anywhere}.hero-sub{font-size:11px;color:#a8c5b4}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric{background:#0c120f;border:1px solid #243129;border-radius:13px;padding:12px;min-width:0}.metric-label{font-size:10px;color:#8fa197;line-height:1.35;min-height:27px}.metric-value{font-size:clamp(16px,4.2vw,21px);font-weight:800;letter-spacing:-.4px;margin-top:5px;overflow-wrap:anywhere}.metric-sub{font-size:10px;color:#7e9085;margin-top:4px}.metric.profit .metric-value{color:var(--green)}.metric.loss .metric-value{color:#ff7884}.metric.wide{grid-column:1/-1}.subhead{font-size:10px;color:#90a398;font-weight:850;letter-spacing:1.25px;margin:17px 0 9px}.warn-text{color:var(--amber)!important}.invalid-hint{color:#7d8d83;font-size:12px;text-align:center;padding:18px 8px}
+    .footer{text-align:center;color:#5e7065;font-size:10px;line-height:1.6;margin:20px 8px 0}.footer strong{color:#9eafa5;letter-spacing:1px}.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#e6fff1;color:#062013;padding:11px 16px;border-radius:10px;font-size:12px;font-weight:750;box-shadow:0 10px 30px #0008;transition:.2s;z-index:5;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(min-width:600px){.wrap{padding:32px 22px 50px}.section{padding:21px}.grid{gap:14px}.result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.metric.wide{grid-column:auto}}
+    @media(max-width:360px){.wrap{padding-left:12px;padding-right:12px}.section{padding:14px}.actions{gap:5px}.btn{font-size:9px}.grid{gap:9px}}
+  
+    .site-nav{width:min(1120px,100% - 32px);margin:0 auto;padding:18px 0;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10}
+    .nav-brand{font-weight:900;letter-spacing:2px;color:#f1f7f3;text-decoration:none;font-size:18px}.nav-brand span:last-child{color:var(--green)}.nav-mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--green);color:#04150d;margin-right:8px}
+    .nav-links{display:flex;align-items:center;gap:28px}.nav-links a,.nav-dropdown>button{color:#c7d4cc;text-decoration:none;background:none;border:0;font:600 13px inherit;cursor:pointer}
+    .nav-dropdown{position:relative}.dropdown-menu{display:none;position:absolute;right:0;top:30px;min-width:220px;padding:8px;background:#121a15;border:1px solid #293a30;border-radius:12px;box-shadow:0 16px 40px #0009}.nav-dropdown:hover .dropdown-menu,.nav-dropdown:focus-within .dropdown-menu{display:grid}.dropdown-menu a{padding:11px;border-radius:8px}.dropdown-menu a:hover{background:#1b2a21}
+    .mobile-menu{display:none;background:#111a15;color:#eaf4ed;border:1px solid #293a30;border-radius:10px;padding:9px 12px}
+    @media(max-width:600px){.site-nav{padding:14px 0}.nav-links{gap:14px}.nav-links>a{display:none}.nav-dropdown>button{font-size:12px}.mobile-menu{display:none}}
+    </style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-brand" href="../../"><span class="nav-mark">E</span> ELVO<span>EST</span></a>
+  <div class="nav-links"><a href="../../">Home</a><div class="nav-dropdown"><button type="button" aria-expanded="false">Features <span>⌄</span></button><div class="dropdown-menu"><a href="../futures/">Futures Position Size</a><a href="../compounding/">Compounding Calculator</a></div></div></div>
+  <button class="mobile-menu" aria-label="Open navigation" type="button">☰</button>
+</nav>
+<main class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">E</div><div><div class="brandname">ELVO<span>EST</span></div><div class="subbrand">FUTURES POSITION SIZE CALCULATOR</div></div></div>
+    <div class="local">● LOCAL MODE</div>
+  </header>
+  <h1>Trade with a plan.<br><span style="color:var(--green)">Size with precision.</span></h1>
+  <p class="intro">Calculate position size, required margin, risk and estimated P&amp;L. All calculations run locally on this device.</p>
+
+  <section class="section">
+    <div class="section-head"><div class="section-title">Account Settings</div><div class="step">01 / SETUP</div></div>
+    <div class="grid">
+      <div class="field"><label for="balance">Account Balance</label><div class="input-wrap"><input id="balance" type="number" min="0" step="any" inputmode="decimal" placeholder="1000"><span class="suffix">USDT</span></div></div>
+      <div class="field"><label for="leverage">Leverage</label><div class="input-wrap"><input id="leverage" class="has-suffix" type="number" min="0" step="any" inputmode="decimal" placeholder="10"><span class="suffix">X</span></div></div>
+      <div class="field"><label for="risk">Risk Percentage</label><div class="input-wrap"><input id="risk" class="has-suffix" type="number" min="0" max="100" step="any" inputmode="decimal" placeholder="1"><span class="suffix">%</span></div></div>
+      <div class="field"><label for="fx">USDT / IDR Rate</label><div class="input-wrap"><input id="fx" type="number" min="0" step="any" inputmode="decimal" placeholder="16000"></div></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="save">SAVE SETTINGS</button><button class="btn" id="load">LOAD SETTINGS</button><button class="btn" id="reset">RESET SETTINGS</button></div>
+    <p class="note">Only these four account settings are saved on this device. Trade parameters are not stored. No account, login or cloud sync required.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div class="section-title">Trade Parameters</div><div class="step">02 / INPUT</div></div>
+    <div class="direction"><button class="dir active long" id="long" type="button" aria-pressed="true">↗ LONG</button><button class="dir" id="short" type="button" aria-pressed="false">↘ SHORT</button></div>
+    <div class="grid">
+      <div class="field"><label for="entry">Entry Price</label><input id="entry" type="number" min="0" step="any" inputmode="decimal" placeholder="65000"></div>
+      <div class="field"><label for="sl">Stop Loss Price</label><input id="sl" type="number" min="0" step="any" inputmode="decimal" placeholder="64000"></div>
+      <div class="field full"><label for="tp">Take Profit Price</label><input id="tp" type="number" min="0" step="any" inputmode="decimal" placeholder="68000"></div>
+    </div>
+    <div class="error" id="error" role="alert"></div>
+    <div class="warning" id="warning" role="status"></div>
+  </section>
+
+  <section class="section results" id="results" aria-live="polite">
+    <div class="section-head"><div class="section-title">Position Sizing</div><div class="step">03 / RESULTS</div></div>
+    <div class="hero-result"><div class="hero-label">POSITION SIZE · NOTIONAL VALUE</div><div class="hero-value" id="position">—</div><div class="hero-sub" id="quantity">—</div></div>
+    <div class="result-grid">
+      <div class="metric"><div class="metric-label">Required Margin</div><div class="metric-value" id="margin">—</div><div class="metric-sub" id="marginIdr">—</div></div>
+      <div class="metric"><div class="metric-label">Risk Amount</div><div class="metric-value" id="riskAmt">—</div><div class="metric-sub" id="riskIdr">—</div></div>
+      <div class="metric"><div class="metric-label">Margin Utilization</div><div class="metric-value" id="util">—</div><div class="metric-sub">of account balance</div></div>
+      <div class="metric"><div class="metric-label">Stop Loss Distance</div><div class="metric-value" id="slDist">—</div><div class="metric-sub">from entry price</div></div>
+      <div class="metric"><div class="metric-label">Take Profit Distance</div><div class="metric-value" id="tpDist">—</div><div class="metric-sub">from entry price</div></div>
+      <div class="metric"><div class="metric-label">Risk / Reward Ratio</div><div class="metric-value" id="rr">—</div><div class="metric-sub">potential reward : risk</div></div>
+    </div>
+    <div class="subhead">PROFIT &amp; LOSS ESTIMATION</div>
+    <div class="result-grid">
+      <div class="metric loss"><div class="metric-label">Potential Loss</div><div class="metric-value" id="loss">—</div><div class="metric-sub" id="lossIdr">—</div></div>
+      <div class="metric profit"><div class="metric-label">Potential Profit</div><div class="metric-value" id="profit">—</div><div class="metric-sub" id="profitIdr">—</div></div>
+      <div class="metric profit"><div class="metric-label">ROI on Required Margin</div><div class="metric-value" id="roi">—</div><div class="metric-sub">potential profit / margin</div></div>
+    </div>
+    <p class="note">Estimates use the supplied prices and position quantity. Trading fees and funding fees are intentionally excluded. Actual fills, slippage and exchange rules may change realized results.</p>
+  </section>
+  <div class="invalid-hint" id="hint">Enter valid account settings and trade prices to see your position calculations.</div>
+  <footer class="footer"><strong>ELVOEST</strong> · BUILT FOR DISCIPLINED TRADING<br>Calculations are estimates, not financial advice. Verify order details before trading.</footer>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fields = ['balance','leverage','risk','fx','entry','sl','tp'];
+  document.querySelector('.nav-dropdown > button')?.addEventListener('click', e => {
+    const menu = document.querySelector('.dropdown-menu');
+    const open = menu.style.display === 'grid';
+    menu.style.display = open ? 'none' : 'grid';
+    e.currentTarget.setAttribute('aria-expanded', String(!open));
+  });
+  let direction = 'LONG';
+  const num = id => { const v = $(id).value.trim(); return v === '' ? NaN : Number(v); };
+  const fmt = (v, digits=2) => Number(v).toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+  const money = v => `${fmt(v,2)} USDT`;
+  const idr = v => `≈ Rp ${fmt(v,0)}`;
+  const showToast = msg => { $('toast').textContent=msg; $('toast').classList.add('show'); setTimeout(()=>$('toast').classList.remove('show'),1800); };
+  function setDirection(d){
+    direction=d;
+    $('long').className='dir'+(d==='LONG'?' active long':'');
+    $('short').className='dir'+(d==='SHORT'?' active short':'');
+    $('long').setAttribute('aria-pressed',String(d==='LONG'));
+    $('short').setAttribute('aria-pressed',String(d==='SHORT'));
+    calculate();
+  }
+  $('long').addEventListener('click',()=>setDirection('LONG'));
+  $('short').addEventListener('click',()=>setDirection('SHORT'));
+  function invalidate(message){
+    $('results').style.display='none'; $('hint').style.display='block';
+    $('error').textContent=message; $('error').style.display=message?'block':'none';
+    $('warning').style.display='none';
+  }
+  function calculate(){
+    const balance=num('balance'), leverage=num('leverage'), riskPct=num('risk'), fx=num('fx');
+    const entry=num('entry'), sl=num('sl'), tp=num('tp');
+    const missing = [balance,leverage,riskPct,fx,entry,sl,tp].some(v=>!Number.isFinite(v));
+    if(missing){invalidate('');return;}
+    if(balance<=0) return invalidate('Account Balance harus lebih besar dari 0.');
+    if(leverage<=0) return invalidate('Leverage harus lebih besar dari 0.');
+    if(riskPct<=0 || riskPct>100) return invalidate('Risk Percentage harus lebih besar dari 0% dan maksimal 100%.');
+    if(fx<=0) return invalidate('USDT / IDR Rate harus lebih besar dari 0.');
+    if(entry<=0) return invalidate('Entry Price harus lebih besar dari 0.');
+    if(sl<=0 || tp<=0) return invalidate('Stop Loss dan Take Profit harus lebih besar dari 0.');
+    if(direction==='LONG' && !(sl<entry && tp>entry)) return invalidate('Untuk LONG: Stop Loss harus di bawah Entry dan Take Profit harus di atas Entry.');
+    if(direction==='SHORT' && !(sl>entry && tp<entry)) return invalidate('Untuk SHORT: Stop Loss harus di atas Entry dan Take Profit harus di bawah Entry.');
+
+    const riskAmount=balance*riskPct/100;
+    const slDistance=Math.abs(entry-sl)/entry;
+    const tpDistance=Math.abs(tp-entry)/entry;
+    const positionSize=riskAmount/slDistance;
+    const quantity=positionSize/entry;
+    const margin=positionSize/leverage;
+    const marginUtil=margin/balance*100;
+    const potentialLoss=quantity*Math.abs(entry-sl);
+    const potentialProfit=quantity*Math.abs(tp-entry);
+    const rr=tpDistance/slDistance;
+    const roi=potentialProfit/margin*100;
+    if(![riskAmount,slDistance,tpDistance,positionSize,quantity,margin,marginUtil,potentialLoss,potentialProfit,rr,roi].every(Number.isFinite)){
+      return invalidate('Angka terlalu besar atau tidak dapat dihitung. Periksa kembali input.');
+    }
+    $('error').style.display='none';
+    $('results').style.display='block'; $('hint').style.display='none';
+    $('position').textContent=money(positionSize);
+    $('quantity').textContent=`${fmt(quantity,8)} COIN / ASSET`;
+    $('margin').textContent=money(margin); $('marginIdr').textContent=idr(margin*fx);
+    $('riskAmt').textContent=money(riskAmount); $('riskIdr').textContent=idr(riskAmount*fx);
+    $('util').textContent=`${fmt(marginUtil,2)}%`;
+    $('slDist').textContent=`${fmt(slDistance*100,3)}%`;
+    $('tpDist').textContent=`${fmt(tpDistance*100,3)}%`;
+    $('rr').textContent=`1 : ${fmt(rr,2)}`;
+    $('loss').textContent=`−${money(potentialLoss)}`; $('lossIdr').textContent=`−${idr(potentialLoss*fx)}`;
+    $('profit').textContent=`+${money(potentialProfit)}`; $('profitIdr').textContent=`+${idr(potentialProfit*fx)}`;
+    $('roi').textContent=`${fmt(roi,2)}%`;
+    if(margin>balance){
+      $('warning').textContent=`Required Margin (${money(margin)}) melebihi Account Balance (${money(balance)}). Posisi ini tidak dapat didukung oleh saldo tersebut pada leverage yang dimasukkan.`;
+      $('warning').style.display='block';
+    } else $('warning').style.display='none';
+  }
+  fields.forEach(id=>$(id).addEventListener('input',calculate));
+  $('save').addEventListener('click',()=>{
+    const data={balance:$('balance').value,leverage:$('leverage').value,risk:$('risk').value,fx:$('fx').value};
+    if(!data.balance||!data.leverage||!data.risk||!data.fx||Number(data.balance)<=0||Number(data.leverage)<=0||Number(data.risk)<=0||Number(data.risk)>100||Number(data.fx)<=0){showToast('Isi 4 pengaturan akun dengan nilai valid.');return;}
+    try{localStorage.setItem('elvoest.accountSettings.v1',JSON.stringify(data));showToast('Account settings saved on this device.');}catch(e){showToast('Penyimpanan lokal tidak tersedia.');}
+  });
+  $('load').addEventListener('click',()=>{
+    try{const raw=localStorage.getItem('elvoest.accountSettings.v1');if(!raw){showToast('Belum ada settings tersimpan.');return;}
+      const data=JSON.parse(raw);['balance','leverage','risk','fx'].forEach(k=>$(k).value=data[k]??'');calculate();showToast('Account settings loaded.');
+    }catch(e){showToast('Settings tidak dapat dibaca.');}
+  });
+  $('reset').addEventListener('click',()=>{
+    ['balance','leverage','risk','fx'].forEach(k=>$(k).value='');
+    try{localStorage.removeItem('elvoest.accountSettings.v1');}catch(e){}
+    calculate();showToast('Account settings reset.');
+  });
+  if('serviceWorker' in navigator && location.protocol!=='file:'){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  }
+  calculate();
+})();
+</script>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("../../sw.js",{scope:"../../"}));</script></body>
+</html>
